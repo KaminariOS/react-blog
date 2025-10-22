@@ -2,7 +2,7 @@
 const siteMetadata = {
   title: 'Next.js Starter Blog',
   author: 'Kosumi',
-  headerTitle: 'Personal page',
+  headerTitle: "Kosumi's Fortress of Solitude",
   description: 'A blog created with Next.js and Tailwind.css',
   language: 'en-us',
   theme: 'system', // system, dark or light
