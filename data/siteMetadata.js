@@ -1,9 +1,9 @@
 /** @type {import("pliny/config").PlinyConfig } */
 const siteMetadata = {
-  title: 'Next.js Starter Blog',
+  title: 'Kosumi.dev',
   author: 'Kosumi',
   headerTitle: "Kosumi's Fortress of Solitude",
-  description: 'A blog created with Next.js and Tailwind.css',
+  description: 'Reflections on tech, life, and finance — powered by Next.js and Tailwind CSS.',
   language: 'en-us',
   theme: 'system', // system, dark or light
   siteUrl: 'https://kosumi.dev',
@@ -17,7 +17,7 @@ const siteMetadata = {
   // twitter: 'https://twitter.com/Twitter',
   facebook: 'https://facebook.com',
   youtube: 'https://youtube.com',
-  linkedin: 'https://www.linkedin.com',
+  linkedin: 'https://www.linkedin.com/in/kosumi-chan-80b093249',
   threads: 'https://www.threads.net',
   instagram: 'https://www.instagram.com',
   medium: 'https://medium.com',
