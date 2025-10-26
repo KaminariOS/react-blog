@@ -1,0 +1,188 @@
+---
+title: "Building Your Own Cloud Like Legos: reclaiming control of your data, services and infrastructure"
+date: '2025-10-25'
+tags: ['Cloud native', 'k8s', 'tailscale', 'cloudflare', 'digital sovereignty']
+draft: false
+summary: 'The 2025 AWS outage exposed how dependent we are on centralized cloud giants that profit from our data and control our digital lives through surveillance and censorship. Building your own cloud restores autonomy: connect devices with Tailscale, orchestrate apps using k3s, route traffic securely via cloudflared tunnels, and ensure reproducibility with NixOS. Like assembling Legos, you can mix local machines and cloud VMs to form a self-hosted, hybrid cloud. It’s not just a technical project—it’s a political act of reclaiming privacy, resilience, and digital sovereignty from Big Tech’s monopolized infrastructure.'
+---
+
+## Introduction
+
+Last month, when the world’s largest cloud provider faltered, millions of users and businesses felt it.  
+On **October 20 2025**, a cascading failure in the Amazon Web Services **US-EAST-1** region brought down everything from banking apps and flight check-ins to smart home devices.  
+
+It was a wake-up call: our digital lives rest on infrastructure we don’t control.  
+At the same time, big tech firms quietly build enormous profit machines out of our data — tracking, profiling, influencing, and sometimes censoring.
+
+What if instead of being a *user* of someone else’s cloud, you built **your own cloud**, modular like Legos — owned, operated, and controlled by you?
+
+
+## 🏛️ The Political and Industrial Context
+
+### 1. Dependence and Fragility
+
+The AWS outage exposed how deeply the internet depends on a handful of hyperscale providers.  
+A single subsystem failure — in its DNS resolution — rippled across the global web, demonstrating **centralization fragility**.
+
+When you self-host or federate your own infrastructure, you reduce dependence on a single corporate gatekeeper.
+
+---
+
+### 2. Privacy, Profit, and Censorship
+
+Much of Big Tech’s revenue depends on collecting, analyzing, and monetizing user data.  
+From tracking pixels to algorithmic profiling, our online activity fuels a trillion-dollar data economy.  
+([Harvard Kennedy School – *Big Tech Makes Billions Off Our Personal Data*](https://www.hks.harvard.edu/centers/mrcbg/programs/growthpolicy/big-tech-makes-billions-our-personal-data-its-time-us-pull))
+
+Beyond profit, there’s power: platforms can **shape visibility**, **moderate speech**, and **silence dissent** — voluntarily or under state pressure.  
+Hosting your own data and services becomes an act of **digital self-determination**.
+
+---
+### 3. Autonomy and Sovereignty
+
+To self-host is to reclaim control over your digital space — like generating your own electricity or growing your own food.  
+You can’t be deplatformed, rate-limited, or mined for behavioral insights.  
+You decide what runs, where, and who can access it.
+
+---
+
+### 💰 Cost and Efficiency
+
+Cloud services promise flexibility, but that convenience comes at a steep price.  
+While providers like AWS advertise *“free-tier”* serverless quotas, 
+
+While providers like AWS advertise *“free-tier”* Serverless quotas, but what happens when you need a **long-running virtual machine**, a **private database**, or a **stable API service**, a long-running AI agent, an mail server, a VPN proxy, and MCP servers that doesn’t sleep after 15 minutes of inactivity? Suddenly, your “free” cloud turns into a recurring bill — metered by the gigabyte, the request, and the hour.  
+
+The economics of cloud computing favor providers, not users: you pay indefinitely for compute cycles you don’t own.  
+Self-hosting or running hybrid infrastructure changes that equation — you invest once, and you control how every watt and byte is spent.
+
+---
+## 🧩 Building Your Cloud Like Legos
+
+We’ll use these building blocks:
+
+- **Tailscale** → secure mesh network (connect local + cloud nodes)
+- **k3s** → lightweight Kubernetes for orchestration
+- **cloudflared** → secure ingress tunnel (no exposed ports)
+- **NixOS**(optional but recommended) → reproducible, declarative system configuration
+
+---
+
+### 🧠 Step 1: Infrastructure Layer
+
+A hybrid cluster of **local machines** (on-prem) with **cloud VMs** (AWS, GCE, Azure, Oracle VM, etc.) 
+
+GCE provides a free ec2-micro instance but the free egress traffic is limited to 1GB/month.
+
+Oracle VM is much more generous: its Always Free tier offers a 4-core, 24GB ARM machine with a 200GB disk 24/7 for ***free***. 
+
+You can also add your PCs, laptops, Raspberry Pis and PCBs into the cluster.
+
+This is the power if cloud native technology: it connects all the available computing resource uniformly.
+
+> Connecting lakes to be a single bigger lake 
+
+---
+
+### 🔗 Step 2: Network Mesh with Tailscale
+
+Install [Tailscale](https://tailscale.com) on all nodes to create a private, encrypted mesh network.  
+Now your laptop, server, and VMs all share a single internal network without manual VPN setup.
+
+Tailscale itself alone is very useful. Now you can ssh into your remote machine(without a public IP) anywhere .
+
+You can find setup instructions online, but I just enable it in my NixOS config.
+
+
+### ⚙️ Step 3: Lightweight Kubernetes with k3s (an Operating System for Clouds)
+
+[k3s](https://k3s.io) is a lightweight, certified Kubernetes distribution designed for edge and hybrid environments.  
+Think of it as **an operating system for clouds** — minimal, fast, and ideal for self-hosted clusters.
+
+It allows you to orchestrate containers across your machines (local and remote) just like AWS or GCP do internally.  
+By connecting k3s nodes over your secure Tailscale network, you gain all the benefits of a managed cloud — but owned by you.
+
+Use it to:
+- Run containerized apps across all your nodes  
+- Manage updates, scaling, and service discovery  
+- Create internal networks and persistent volumes  
+
+Once set up, your local box and cloud VM become a single distributed system: **your own cloud control plane**.
+
+If you have no less than 3 nodes, you can enable High Availability mode: if you have $2f + 1$ master nodes, your control plane can tolerate at most $f$ of them to fail -- Raft consensus algorithm in action!   
+
+---
+
+### 🌐 Step 4: Secure Ingress with cloudflared
+
+To make your services reachable from anywhere without exposing ports or public IPs, use **cloudflared** tunnels.  
+It creates an encrypted connection from your local network to Cloudflare’s global edge, handling TLS, routing, and DNS automatically.
+
+This means:
+- No manual port forwarding  
+- Your home IP stays private  
+- You still get HTTPS and custom domains  
+
+Your apps stay secure behind Cloudflare’s edge while remaining physically under your control.
+Sure, you need to pay rent for the apex domain, but hey, you are cyber-homeless without your own cyber address.
+
+---
+
+### 🧬 Step 5: Reproducibility with NixOS
+
+[NixOS](https://nixos.org) brings reproducibility to your infrastructure.  
+Instead of manually configuring packages or services, you define your entire system — kernel, packages, users, services — in code.
+
+With a single configuration file, you can rebuild or replicate a node anywhere:
+- Every server, VM, and laptop runs the same declarative setup  
+- System rollbacks take one command  
+- Updates are atomic and version-controlled  
+
+This transforms your infrastructure into a *software project*, not a pile of mutable servers.
+
+My whole home and NixOS configuration lives at a public [Github repo](https://github.com/KaminariOS/nix-flake-config).
+
+Once you have ssh root access to any Linux machine, you can use [nixos-anywhere](https://github.com/nix-community/nixos-anywhere) to install NixOS on it automatically. Once NixOS is set up on the machine, you can use tools like [colmena](https://github.com/zhaofengli/colmena) to deploy your latest configuration to it. Set up a Nix flake once and deploy anywhere reproducibly.
+
+---
+
+### 🧠 Step 6: Putting It All Together
+
+Your self-hosted cloud becomes a mesh of composable blocks:
+1. **NixOS** for deterministic systems  
+2. **Tailscale** for private networking  
+3. **k3s** for orchestration  
+4. **cloudflared** for safe ingress  
+
+Each part is small, clear, and replaceable — just like Lego pieces.  
+Together, they form a distributed, personal cloud where you decide what runs and who can access it.
+
+You can deploy apps, websites, or AI services across local and remote nodes, scale as needed, and remain free from the whims of centralized infrastructure.
+
+Sounds good, right? However, there are quite some pitfalls when putting pieces together(mostly because of the networking), which I will trouble shoot in another post. It took me a week of painful debugging to fix them all.
+
+---
+
+### 🛡️ Resilience and Control
+
+Owning your stack gives you:
+- **Resilience** — if a node fails, the rest continue  
+- **Privacy** — no telemetry, no tracking  
+- **Sovereignty** — your data, your infrastructure  
+- **Transparency** — no opaque black boxes  
+
+When an AWS or Google outage happens, your systems stay online.  
+When policies or censorship tighten, your services stay yours.
+
+---
+
+### 🏁 Conclusion
+
+Building your own cloud is not only a technical challenge — it’s a political statement.  
+You reject dependence on megaclouds, reclaim autonomy, and own your digital presence.  
+
+Start small: one node, one service. Add more over time.  
+Piece by piece, your infrastructure grows — like Lego blocks clicking into place — until you’ve built something truly yours.
+
+> Grow your own cloud. Run your own stack. Host your own service. By youself and for yourself. 
+> The internet belongs to everyone who dares to host it.
