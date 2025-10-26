@@ -1,0 +1,107 @@
+{
+  "latitude": 35.9151,
+  "lookupSource": "coordinates",
+  "longitude": -79.0972,
+  "localityLanguageRequested": "en",
+  "continent": "North America",
+  "continentCode": "NA",
+  "countryName": "United States of America (the)",
+  "countryCode": "US",
+  "principalSubdivision": "North Carolina",
+  "principalSubdivisionCode": "US-NC",
+  "city": "Chapel Hill",
+  "locality": "Carrboro",
+  "postcode": "27510",
+  "plusCode": "8772WW83+24",
+  "fips": {
+    "state": "37",
+    "county": "135",
+    "countySubdivision": "90620",
+    "place": "10620"
+  },
+  "localityInfo": {
+    "administrative": [
+      {
+        "name": "United States of America (the)",
+        "description": "country in North America",
+        "isoName": "United States of America (the)",
+        "order": 2,
+        "adminLevel": 2,
+        "isoCode": "US",
+        "wikidataId": "Q30",
+        "geonameId": 6252001
+      },
+      {
+        "name": "North Carolina",
+        "description": "state of the United States of America",
+        "isoName": "North Carolina",
+        "order": 5,
+        "adminLevel": 4,
+        "isoCode": "US-NC",
+        "wikidataId": "Q1454",
+        "geonameId": 4482348
+      },
+      {
+        "name": "Orange County",
+        "description": "county in North Carolina, United States",
+        "order": 6,
+        "adminLevel": 6,
+        "wikidataId": "Q507957",
+        "geonameId": 4483525
+      },
+      {
+        "name": "Chapel Hill",
+        "description": "township in Orange County, North Carolina",
+        "order": 7,
+        "adminLevel": 8,
+        "wikidataId": "Q6027868",
+        "geonameId": 4460162
+      },
+      {
+        "name": "Carrboro",
+        "description": "town in North Carolina, United States",
+        "order": 9,
+        "adminLevel": 8,
+        "wikidataId": "Q780330",
+        "geonameId": 4459343
+      }
+    ],
+    "informative": [
+      {
+        "name": "North America",
+        "description": "continent",
+        "isoName": "North America",
+        "order": 1,
+        "isoCode": "NA",
+        "wikidataId": "Q49",
+        "geonameId": 6255149
+      },
+      {
+        "name": "contiguous United States",
+        "description": "the 48 states of the United States (all but Alaska and Hawaii) and the District of Columbia",
+        "order": 3,
+        "wikidataId": "Q578170"
+      },
+      {
+        "name": "America/New_York",
+        "description": "time zone",
+        "order": 4
+      },
+      {
+        "name": "37-135-90620",
+        "description": "FIPS code",
+        "order": 8
+      },
+      {
+        "name": "37-10620",
+        "description": "FIPS code",
+        "order": 10
+      },
+      {
+        "name": "27510",
+        "description": "postal code",
+        "order": 11
+      }
+    ]
+  }
+}

@@ -1,0 +1,107 @@
+{
+  "latitude": 37.42159,
+  "lookupSource": "coordinates",
+  "longitude": -122.0837,
+  "localityLanguageRequested": "en",
+  "continent": "North America",
+  "continentCode": "NA",
+  "countryName": "United States of America (the)",
+  "countryCode": "US",
+  "principalSubdivision": "California",
+  "principalSubdivisionCode": "US-CA",
+  "city": "San Jose",
+  "locality": "Mountain View",
+  "postcode": "94043",
+  "plusCode": "849VCWC8+JG",
+  "fips": {
+    "state": "06",
+    "county": "085",
+    "countySubdivision": "92830",
+    "place": "49670"
+  },
+  "localityInfo": {
+    "administrative": [
+      {
+        "name": "United States of America (the)",
+        "description": "country in North America",
+        "isoName": "United States of America (the)",
+        "order": 2,
+        "adminLevel": 2,
+        "isoCode": "US",
+        "wikidataId": "Q30",
+        "geonameId": 6252001
+      },
+      {
+        "name": "California",
+        "description": "state of the United States of America",
+        "isoName": "California",
+        "order": 5,
+        "adminLevel": 4,
+        "isoCode": "US-CA",
+        "wikidataId": "Q99",
+        "geonameId": 5332921
+      },
+      {
+        "name": "Santa Clara County",
+        "description": "county in California, United States",
+        "order": 6,
+        "adminLevel": 6,
+        "wikidataId": "Q110739",
+        "geonameId": 5393021
+      },
+      {
+        "name": "San Jose",
+        "description": "city and county seat of Santa Clara County, California, United States",
+        "order": 7,
+        "adminLevel": 8,
+        "wikidataId": "Q16553",
+        "geonameId": 5392171
+      },
+      {
+        "name": "Mountain View",
+        "description": "city in Santa Clara County, California, United States",
+        "order": 9,
+        "adminLevel": 8,
+        "wikidataId": "Q486860",
+        "geonameId": 5375480
+      }
+    ],
+    "informative": [
+      {
+        "name": "North America",
+        "description": "continent",
+        "isoName": "North America",
+        "order": 1,
+        "isoCode": "NA",
+        "wikidataId": "Q49",
+        "geonameId": 6255149
+      },
+      {
+        "name": "contiguous United States",
+        "description": "the 48 states of the United States (all but Alaska and Hawaii) and the District of Columbia",
+        "order": 3,
+        "wikidataId": "Q578170"
+      },
+      {
+        "name": "America/Los_Angeles",
+        "description": "time zone",
+        "order": 4
+      },
+      {
+        "name": "06-085-92830",
+        "description": "FIPS code",
+        "order": 8
+      },
+      {
+        "name": "06-49670",
+        "description": "FIPS code",
+        "order": 10
+      },
+      {
+        "name": "94043",
+        "description": "postal code",
+        "order": 11
+      }
+    ]
+  }
+}
