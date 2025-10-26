@@ -226,13 +226,6 @@ export default function DeviceLocation() {
               <dd className="mt-1 font-mono text-base">{coords.longitude.toFixed(2)}</dd>
             </div>
 
-            {coords.accuracy != null && (
-              <div className="rounded-md border border-gray-200 p-4 dark:border-gray-700">
-                <dt className="font-medium text-gray-700 dark:text-gray-300">Accuracy</dt>
-                <dd className="mt-1 font-mono text-base">{Math.round(coords.accuracy)} meters</dd>
-              </div>
-            )}
-
             {coords.altitude != null && (
               <div className="rounded-md border border-gray-200 p-4 dark:border-gray-700">
                 <dt className="font-medium text-gray-700 dark:text-gray-300">Altitude</dt>
