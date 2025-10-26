@@ -1,0 +1,66 @@
+---
+title: "k3s and tailscale networking problems"
+date: '2025-10-26'
+tags: ['Cloud native', 'k8s', 'tailscale']
+draft: false
+summary: 'coredns forward and CNI fix'
+---
+
+## Previous post
+[Building Your Own Cloud Like Legos: reclaiming control of your data, services and infrastructure](./Building-Your-Own-Cloud-Like-Legos)
+
+## Roadblockers
+
+Setting up your own cloud itself is pretty straightforward, especially if you are on NixOS. To expose an API endpoint to the Internet, you just need to set up the DNS record with one command like this:
+```bash
+cloudflared tunnel route dns my-tunnel api.kosumi.dev
+```
+
+However, once I deploy my hello-world web server, I notice that it is very unstable. Sometimes it takes super long to respond, or sometimes unresponsive at all.
+
+At first I thought there was something wrong with the Cloudflared helm chart. Switching from the official chart to the community one did not help.
+
+I used
+
+```bash
+kubectl debug -it -n cloudflared-tunnel my-cloudflared-tq7d8 --image=busybox -- sh
+```
+to attach to the cloudflared pod to run commands. I noticed 2 problems:
+
+- Sometimes DNS resolution does not work. It can resolve public domains like `google.com` but not cluster domains like `http://rust-hello.default.svc.cluster.local`.
+- Sometimes DNS resolution works but it can not connect to the cluster service ip. 
+
+ {/* The first bug I found is the `options ndots:5` line in `/etc/resolv.conf`.  */}
+
+ I used Chatgpt to guide my debugging along the way. I even fired up codex to let it execute `kubectl` commands. 
+
+ They are quite helpful, especially for a newbie like me. They quickly found 2 root cause:
+
+ - Tailscale overwrites host /etc/resolv.conf
+   The `coredns` service in k3s is responsible for resolving cluster domains like the one shown above. By default it will forward external domains like `google.com` to the host DNS server in `/etc/resolv.conf`. The problem is when you have tailscale enabled in your host system, your `/etc/resolv.conf` is overwritten by it, then the DNS resolution will be forward to tailscale DNS server, which may have trouble resolving cloudflare domains like `argotunnel.com`. The solution is to enable `systemd-resolved` service.
+   . You can also use this command to manually add DNS nameservers in `forward`:
+   ```
+   kubectl -n kube-system edit cm coredns
+   # forward 1.1.1.1 8.8.8.8
+   ```
+ - The CNI plugin may be broken 
+
+   > A CNI (Container Network Interface) plugin in Kubernetes is a component that implements the CNI specification, an open standard for configuring network interfaces in Linux containers. Its primary role is to manage the network connectivity for Kubernetes Pods.
+
+   It took me some time to confirm this. None of the solutions proposed by Chatgpt worked. Finally I found this [github issue](https://github.com/k3s-io/k3s/issues/6171) by googling: it turned out that k3s default CNI was indeed broken. 
+   My k3s version is 
+   ```bash
+   > k3s --version
+   k3s version v1.33.5+k3s1 (fab4a5c3)
+   go version go1.25.1
+   ```
+   You can check the [commit](https://github.com/KaminariOS/nix-flake-config/commit/4bad7a9fd0ad39434feba0f4cb76f7efafbad8cb#diff-bb51a0a58ad67bb973f730f2deb8a61cc5e92e8f37f1c8d09232a7a2db17f282R94) where I fixed it: 
+
+## Reflection
+It took me almost a week to get things straight, which is definitely longer than necessary and bad for mental health. 
+
+I had other priorities but got obsessed with this.
+
+I should have attacked debugging problem more strategically.
+
+

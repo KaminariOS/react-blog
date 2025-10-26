@@ -1,7 +1,7 @@
 ---
 title: "Building Your Own Cloud Like Legos: reclaiming control of your data, services and infrastructure"
 date: '2025-10-25'
-tags: ['Cloud native', 'k8s', 'tailscale', 'cloudflare', 'digital sovereignty']
+tags: ['Cloud native', 'k8s', 'NixOS', 'tailscale', 'cloudflare', 'digital sovereignty']
 draft: false
 summary: 'The 2025 AWS outage exposed how dependent we are on centralized cloud giants that profit from our data and control our digital lives through surveillance and censorship. Building your own cloud restores autonomy: connect devices with Tailscale, orchestrate apps using k3s, route traffic securely via cloudflared tunnels, and ensure reproducibility with NixOS. Like assembling Legos, you can mix local machines and cloud VMs to form a self-hosted, hybrid cloud. It’s not just a technical project—it’s a political act of reclaiming privacy, resilience, and digital sovereignty from Big Tech’s monopolized infrastructure.'
 ---
@@ -94,22 +94,46 @@ Tailscale itself alone is very useful. Now you can ssh into your remote machine(
 You can find setup instructions online, but I just enable it in my NixOS config.
 
 
-### ⚙️ Step 3: Lightweight Kubernetes with k3s (an Operating System for Clouds)
+### ⚙️ Step 3: Lightweight Kubernetes with k3s (a Cloud Operating System )
 
-[k3s](https://k3s.io) is a lightweight, certified Kubernetes distribution designed for edge and hybrid environments.  
-Think of it as **an operating system for clouds** — minimal, fast, and ideal for self-hosted clusters.
+[k3s](https://k3s.io) is a lightweight, certified Kubernetes distribution designed for **edge, hybrid, and resource-constrained environments**.  
+Think of it as **a cloud operating system ** — virtualization, abstraction, and scheduling.
 
 It allows you to orchestrate containers across your machines (local and remote) just like AWS or GCP do internally.  
-By connecting k3s nodes over your secure Tailscale network, you gain all the benefits of a managed cloud — but owned by you.
+By connecting k3s nodes over your secure Tailscale network, you gain all the benefits of a managed cloud — but owned and controlled entirely by you.
 
-Use it to:
-- Run containerized apps across all your nodes  
-- Manage updates, scaling, and service discovery  
-- Create internal networks and persistent volumes  
+#### 🌐 Why k3s?
+- **Lightweight and fast:** Minimal binary footprint, optimized for low-resource devices.  
+- **Certified Kubernetes:** Fully compatible with upstream Kubernetes tooling and APIs.  
+- **Built-in simplicity:** Integrated SQLite datastore (or etcd for HA), automatic TLS, and zero external dependencies.  
+- **Edge-ready:** Perfect for distributed setups — local, remote, or mixed environments.  
 
-Once set up, your local box and cloud VM become a single distributed system: **your own cloud control plane**.
+#### 🧩 Use it to:
+- Run **containerized apps** seamlessly across all your nodes.  
+- Manage **updates, scaling, and service discovery** automatically.  
+- Create **internal networks and persistent volumes** for stateful workloads.  
 
-If you have no less than 3 nodes, you can enable High Availability mode: if you have $2f + 1$ master nodes, your control plane can tolerate at most $f$ of them to fail -- Raft consensus algorithm in action!   
+Once set up, your **local box** and **cloud VM** become a single distributed system —  
+your own **cloud control plane**.
+
+#### 🧠 High Availability (HA) Mode
+If you have **no fewer than 3 nodes**, you can enable High Availability mode.  
+With **2f + 1 master nodes**, your control plane can tolerate up to **f failures** —  
+thanks to the **Raft consensus algorithm** ensuring reliability and fault tolerance.
+
+
+#### ⚓ Helm Charts — Simplified App Management for Kubernetes
+
+[Helm](https://helm.sh) is the **package manager for Kubernetes**, and it works beautifully with k3s. At its core it is basically a collection of K8s template config yaml files for the deployment of an application.
+
+**Benefits of Helm Charts:**
+- 🧱 **Reusable Deployments:** Define complex apps (with all their services, volumes, secrets) once and deploy them anywhere.  
+- ⚙️ **Version Control:** Treat your deployments like code — easy to roll back or upgrade.  
+- 🚀 **Fast Setup:** Install production-ready apps like PostgreSQL, Prometheus, or NGINX in seconds with a single command.  
+- 🔧 **Customizable:** Override configuration values to adapt the same chart for dev, staging, and prod.  
+- 🌍 **Community Ecosystem:** Thousands of charts available for nearly every common service or stack.
+
+With k3s and Helm together, you gain a **lightweight yet production-grade orchestration system** — your own **cloud-native platform**, privately hosted and fully under your control.
 
 ---
 
@@ -159,7 +183,7 @@ Together, they form a distributed, personal cloud where you decide what runs and
 
 You can deploy apps, websites, or AI services across local and remote nodes, scale as needed, and remain free from the whims of centralized infrastructure.
 
-Sounds good, right? However, there are quite some pitfalls when putting pieces together(mostly because of the networking), which I will trouble shoot in another post. It took me a week of painful debugging to fix them all.
+Sounds good, right? However, there are quite some pitfalls when putting pieces together(mostly because of the networking), which I will trouble shoot in [another post](./tailscale-k3s-troubleshooting). It took me a week of painful debugging to fix them all.
 
 ---
 
