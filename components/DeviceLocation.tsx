@@ -219,11 +219,11 @@ export default function DeviceLocation() {
             </div>
             <div className="rounded-md border border-gray-200 p-4 dark:border-gray-700">
               <dt className="font-medium text-gray-700 dark:text-gray-300">Latitude</dt>
-              <dd className="mt-1 font-mono text-base">{coords.latitude.toFixed(6)}</dd>
+              <dd className="mt-1 font-mono text-base">{coords.latitude.toFixed(2)}</dd>
             </div>
             <div className="rounded-md border border-gray-200 p-4 dark:border-gray-700">
               <dt className="font-medium text-gray-700 dark:text-gray-300">Longitude</dt>
-              <dd className="mt-1 font-mono text-base">{coords.longitude.toFixed(6)}</dd>
+              <dd className="mt-1 font-mono text-base">{coords.longitude.toFixed(2)}</dd>
             </div>
 
             {coords.accuracy != null && (
