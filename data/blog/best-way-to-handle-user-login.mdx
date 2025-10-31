@@ -1,0 +1,120 @@
+---
+title: The Best Way to Handle User Login
+date: '2025-10-31'
+tags: ['authentication', 'security', 'webauthn', 'passkey']
+draft: false
+summary: "Exploring modern authentication strategies for public-facing apps — from passwords to passkeys, and how to unify them securely."
+---
+
+When you’re building a **public-facing service** — say, a chat application — one of the first features you need is **user authentication**.  
+How users register, log in, and stay authenticated directly affects both **user experience** and **security**.
+
+Let’s explore the main approaches and why **WebAuthn passkeys** are becoming the best choice for modern web apps.
+
+---
+
+## 1. The Simplest (and Worst) Way: Password Login
+
+The traditional approach is simple:
+
+- User signs up with an email and password.  
+- You hash the password (hopefully using bcrypt or Argon2).  
+- On login, you verify the hash and issue a session or JWT.
+
+While it’s straightforward, it comes with **a laundry list of problems**:
+
+- Users reuse passwords across sites.  
+- You have to manage password resets, recovery emails, and validation.  
+- It’s vulnerable to phishing, credential stuffing, and data breaches.  
+- Storing password hashes securely is a non-trivial responsibility.
+
+In short — passwords are **outdated and risky**.
+
+---
+
+## 2. The "Better But Limited" Way: OAuth Login (Google, GitHub, etc.)
+
+To simplify things, many apps let users log in via **third-party providers** like Google or Apple.
+
+This approach (via **OAuth2** and **OpenID Connect**) removes the need to handle passwords yourself.  
+It improves UX (one-click login!) and reduces your security burden.
+
+However, it’s **not perfect**:
+
+- You rely on external providers — if they change their APIs or block your app, you lose access.  
+- You have less control over user identity data.  
+- Some users dislike linking their personal accounts to third-party services.  
+- It adds complexity if you want to **self-host** or build **offline-capable** systems.
+
+---
+
+## 3. The Best Way: Passkeys and WebAuthn
+
+**Passkeys**, powered by the **WebAuthn** standard, are the new gold standard for secure and user-friendly authentication.
+
+Instead of passwords or tokens, authentication happens via **public-key cryptography**: 
+
+- The browser or OS generates a key pair.  
+- The **private key** stays securely on the user’s device.  
+- The **public key** is stored by your service.  
+- Login happens with biometric verification (Face ID, Touch ID, etc.) — **phishing-proof** and **passwordless**.
+
+Sounds familiar, right? This is the same mechanism that secures ssh login and Bitcoin wallets.
+
+It is common sense that SSH via password is a bad practice, so why do people still login to websites with passworld with a bad UX?  
+
+Password managers are convenient, but they do not make the usage of password inherently more **secure**. 
+
+### Advantages
+
+✅ **No passwords to steal** — nothing sensitive ever leaves the device.  
+✅ **Phishing-resistant** — users can’t be tricked into fake domains(WebAuth enforces HTTPS).
+✅ **Fast and seamless** — login with a fingerprint, face scan, or PIN.  
+✅ **Cross-device sync** — major platforms sync passkeys across devices.  
+✅ **Multiple passkeys** — users can register several devices (e.g., phone, laptop, hardware key) as backups.  
+✅ **User anonymity** — WebAuthn doesn’t require personal identifiers. You can authenticate users *without linking to an email or name*, ideal for privacy-first or pseudonymous systems.
+
+### Why It Matters
+
+With passkeys, you get a **frictionless user experience** and **strongest available security model** — without storing or managing any secrets.  
+Users can log in securely even if your database leaks, and you don’t need password resets or 2FA hacks.
+
+---
+
+## 4. Supporting Multiple Methods via a Unified Interface
+
+While passkeys are ideal, users still expect flexibility — some may prefer email login, others Google.
+
+You can design your system around **OAuth2** and **OpenID Connect (OIDC)** as a **unified authentication layer**:
+
+- Use OIDC flows for Google, GitHub, or custom identity providers.  
+- Add a WebAuthn flow for passkeys.  
+- Fallback to password + email OTP for legacy support.
+
+This modular approach gives you full control and makes it easier to migrate toward passwordless over time.
+
+---
+
+## 5. Self-Hosted Identity Providers
+
+If you want to **self-host** your authentication stack — ideal for privacy, control, or enterprise environments — two excellent open-source options are:
+
+- **[Kanidm](https://kanidm.com/)** — an identity management system with built-in WebAuthn and OIDC support.  
+- **[Pocket-ID](https://pocket-id.app/)** — a lightweight self-hosted OIDC provider supporting passkeys and OAuth.
+
+Both allow you to build modern, privacy-friendly auth without relying on cloud identity services.
+
+Even though I am a die-hard Rustacean, kanidm is less mature compared to pocket-id(for example, kanidm's self-registration support is a work in progress).
+
+---
+
+## 🔐 Conclusion
+
+Passwords served the web for decades, but the future is **passwordless**.
+
+Modern applications should adopt **passkeys (WebAuthn)** as the default login option, with fallback methods (OAuth or email) for compatibility.  
+Combine them under a **unified OIDC layer**, and you’ll have a secure, flexible, and user-friendly authentication system.
+
+If you’re building a new app today — especially a public-facing one — start with **passkeys first**.  
+They’re secure, anonymous, easy to use, and resilient — your users (and your backend) will thank you later.
+
