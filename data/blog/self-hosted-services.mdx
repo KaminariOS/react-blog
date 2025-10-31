@@ -1,0 +1,91 @@
+---
+title: What useful services you can self host in your k3s cluster?
+date: '2025-10-24'
+tags: ['opensource', 'cloud', 'self-hosted']
+draft: false
+summary: 'A look at practical, privacy-friendly and productive services to self-host in your lightweight Kubernetes (k3s) cluster.'
+---
+
+If you’re running a [k3s](https://k3s.io/) cluster at home or on a VPS, you already know how powerful it can be to manage your own services declaratively. Instead of renting SaaS platforms, you can host fast, private, and hackable alternatives directly in your cluster — from observability to identity.
+
+Here are a few useful services that fit neatly into a small k3s setup.
+
+---
+
+## 🧠 Observability: Grafana, Loki, and Prometheus
+
+Monitoring is essential once you start running more than a couple of pods. The **Grafana observability stack** (Prometheus + Loki + Tempo + Grafana) is lightweight enough for k3s and gives you full visibility into your system:
+
+- **Prometheus** scrapes metrics from your nodes and apps.
+- **Loki** collects and indexes logs without the overhead of Elasticsearch.
+- **Tempo** adds tracing support if you want distributed observability.
+- **Grafana** ties it all together into beautiful, queryable dashboards.
+
+With persistent volumes and a small retention window, this stack runs well even on a Raspberry Pi or low-spec VPS.
+
+---
+
+## 🗂️ Atuin Server: Shell History Sync
+
+[Atuin](https://github.com/atuinsh/atuin) replaces your shell history with a searchable, syncable SQLite-backed database. Running your **own Atuin server** means you keep your command history encrypted and private, while still syncing it across devices.
+
+A simple Helm chart or Docker-to-Kubernetes migration is enough to deploy it with TLS and persistent storage.
+
+---
+
+## ✅ Taskwarrior Server: CLI Task Management
+
+If you’re a fan of [Taskwarrior](https://taskwarrior.org/), you can self-host your own **Taskserver** to sync tasks between devices. It’s small, stateless, and perfect for Kubernetes. Wrap it with a simple Ingress and TLS, and you’ve got a reliable GTD setup entirely under your control.
+
+Bonus: you can front it with your OIDC provider (see below) to standardize authentication.
+
+---
+
+## 🔐 Self-Hosted Identity: Kanidm or Pocket-ID
+
+Centralizing identity in your cluster is a huge quality-of-life improvement.  
+Two open-source OIDC providers that work well in k3s are:
+
+- [**Kanidm**](https://kanidm.com/): a modern identity management system written in Rust, offering LDAP and OIDC support. It’s great if you want a full directory service.
+- [**Pocket-ID**](https://github.com/pocket-id/pocket-id): a lightweight OIDC provider that integrates easily with small clusters and single-user setups.
+
+Use one of these as your **authentication layer** for Grafana, Atuin, or other web services.
+
+---
+
+## 🧱 Nix Binary Cache: Faster Builds
+
+If you use [Nix](https://nixos.org/), running your own **binary cache** (via [Cachix](https://docs.cachix.org/) alternatives or [attic](https://github.com/zhaofengli/attic)) inside k3s can save massive build time.  
+This lets you share derivations between your local machine, CI jobs, and any remote builder nodes — without hitting the public cache every time.
+
+Mount a persistent volume, expose it internally, and add authentication for private builds.
+
+---
+
+## 📬 Mail Server: Because You Can
+
+Self-hosting email isn’t easy, but it’s absolutely possible — and educational.  
+Projects like [Mailu](https://mailu.io/), [Mailcow](https://mailcow.email/), or [WildDuck](https://github.com/nodemailer/wildduck) can run inside your cluster with proper ingress configuration and DNS records.
+
+For small-scale or lab setups, a k3s-deployed mail stack helps you understand SPF, DKIM, DMARC, and secure delivery in practice.
+
+---
+
+## 🧩 Why Do This?
+
+Self-hosting in k3s is about **autonomy** and **understanding your stack**.  
+You get:
+
+- Full control over your data  
+- Easier integration between services  
+- Declarative, reproducible setups using Helm or Kustomize  
+- An ecosystem that scales down as easily as it scales up
+
+Even a tiny cluster can become a powerful personal cloud.
+
+---
+
+## To be continued...
+
+
+
