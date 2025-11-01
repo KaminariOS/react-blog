@@ -59,16 +59,16 @@ Instead of passwords or tokens, authentication happens via **public-key cryptogr
 - The **public key** is stored by your service.  
 - Login happens with biometric verification (Face ID, Touch ID, etc.) — **phishing-proof** and **passwordless**.
 
-Sounds familiar, right? This is the same mechanism that secures ssh login and Bitcoin wallets.
+Sounds familiar, right? This is the same mechanism that secures SSH login and Bitcoin wallets.
 
-It is common sense that SSH via password is a bad practice, so why do people still login to websites with passworld with a bad UX?  
+It is common sense that SSH via password is a bad practice, so why do people still login to websites with passwords and bad UX?  
 
 Password managers are convenient, but they do not make the usage of password inherently more **secure**. 
 
 ### Advantages
 
 ✅ **No passwords to steal** — nothing sensitive ever leaves the device.  
-✅ **Phishing-resistant** — users can’t be tricked into fake domains(WebAuth enforces HTTPS). 
+✅ **Phishing-resistant** — users can’t be tricked into fake domains (WebAuthn enforces HTTPS).  
 ✅ **Fast and seamless** — login with a fingerprint, face scan, or PIN.  
 ✅ **Cross-device sync** — major platforms sync passkeys across devices.  
 ✅ **Multiple passkeys** — users can register several devices (e.g., phone, laptop, hardware key) as backups.  
@@ -99,12 +99,90 @@ This modular approach gives you full control and makes it easier to migrate towa
 
 If you want to **self-host** your authentication stack — ideal for privacy, control, or enterprise environments — two excellent open-source options are:
 
-- **[Kanidm](https://kanidm.com/)**(Rust) — an identity management system with built-in WebAuthn and OIDC support.  
-- **[Pocket-ID](https://pocket-id.app/)**(Go) — a lightweight self-hosted OIDC provider supporting passkeys and OAuth.
+- **[Kanidm](https://kanidm.com/)** (Rust) — an identity management system with built-in WebAuthn and OIDC support.  
+- **[Pocket-ID](https://pocket-id.app/)** (Go) — a lightweight self-hosted OIDC provider supporting passkeys and OAuth.
 
 Both allow you to build modern, privacy-friendly auth without relying on cloud identity services.
 
-Even though I am a die-hard Rustacean, kanidm is less mature compared to pocket-id(for example, kanidm's self-registration support is a work in progress).
+Even though I am a die-hard Rustacean, Kanidm is less mature compared to Pocket-ID (for example, Kanidm's self-registration support is a work in progress).
+
+---
+
+## 6. Single Sign-On (SSO): Unified Access Across Services
+
+When your ecosystem includes **multiple apps or services**, you’ll want to provide users with **a single, unified login** — that’s where **SSO (Single Sign-On)** comes in.
+
+SSO allows users to authenticate once and gain access to all related applications without re-entering credentials.
+
+### How It Works
+
+Under the hood, SSO relies on **OIDC or SAML** to exchange identity assertions between an **Identity Provider (IdP)** and **Service Providers (SPs)**:
+
+1. User signs in via the IdP (e.g., `auth.example.com`).  
+2. The IdP issues a signed identity token (JWT or SAML assertion).  
+3. Other apps trust this token to identify the user securely.  
+
+This setup centralizes authentication logic and enables consistent access control policies across apps.
+
+### Benefits
+
+✅ **Seamless user experience** — log in once, access everything.  
+✅ **Centralized security** — manage credentials and sessions in one place.  
+✅ **Easier audits and compliance** — one identity source to monitor.  
+✅ **Scalable** — perfect for multi-tenant or enterprise environments.
+
+### With WebAuthn and Passkeys
+
+Passkeys fit naturally into an SSO model: users can authenticate to your IdP using WebAuthn, and the IdP then issues tokens to all your connected apps.  
+This way, you get the **phishing-proof, passwordless UX** of WebAuthn while retaining **cross-app SSO convenience**.
+
+In practice, your WebAuthn-enabled IdP (like **Pocket-ID** or **Kanidm**) becomes your “source of truth” for all user identities.
+
+---
+
+## 7. Public Clients and OAuth Security Considerations
+
+When building frontend applications — particularly **SPAs** or **mobile apps** — you’re dealing with **public clients**, meaning the client cannot securely store secrets.
+
+For example:
+- A React web app running in the browser.  
+- A mobile app distributed to users’ devices.  
+
+Because public clients can’t hide secrets, you must follow **OAuth2 best practices** to prevent token leakage.
+
+### Key Practices
+
+- **Use PKCE (Proof Key for Code Exchange)** — replaces client secrets with a one-time verifier to protect the authorization code flow.  
+- **Never store access tokens in localStorage** — use in-memory storage or HTTP-only cookies to prevent XSS token theft.  
+- **Rely on short-lived tokens** — and refresh them via a secure backend or token endpoint.  
+- **Avoid implicit flow** — use the **Authorization Code Flow with PKCE**, even for SPAs.  
+
+By using PKCE and a robust OIDC implementation, you ensure that **frontend clients** can authenticate safely — without exposing sensitive tokens.
+
+---
+
+## 🧩 Putting It All Together
+
+When you combine:
+- **WebAuthn passkeys** (for strong, user-friendly auth),  
+- **OIDC with PKCE** (for secure frontend and mobile clients), and  
+- **SSO** (for multi-service identity unification),  
+
+you end up with a **complete, future-proof authentication architecture**.
+
+Whether you self-host with Pocket-ID or Kanidm, or rely on a managed provider, the stack looks like this:
+
+[Frontend (SPA / Mobile)]
+↓ PKCE + OIDC
+[Auth Gateway / IdP]
+↓ WebAuthn / Passkey
+[Backend Services via SSO]
+
+This design ensures:
+- Maximum security (public-key cryptography)  
+- Great UX (biometric sign-in)  
+- Centralized identity (SSO)  
+- Compatibility across all client types (PKCE)
 
 ---
 
@@ -117,4 +195,3 @@ Combine them under a **unified OIDC layer**, and you’ll have a secure, flexibl
 
 If you’re building a new app today — especially a public-facing one — start with **passkeys first**.  
 They’re secure, anonymous, easy to use, and resilient — your users (and your backend) will thank you later.
-
