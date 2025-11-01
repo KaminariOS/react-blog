@@ -93,6 +93,8 @@ Tailscale itself alone is very useful. Now you can ssh into your remote machine(
 
 You can find setup instructions online, but I just enable it in my NixOS config.
 
+There is also a self-hosted tailscale alternative Headscale.
+
 
 ### ⚙️ Step 3: Lightweight Kubernetes with k3s (a Cloud Operating System )
 
@@ -149,6 +151,8 @@ This means:
 
 Your apps stay secure behind Cloudflare’s edge while remaining physically under your control.
 Sure, you need to pay rent for the apex domain, but hey, you are cyber-homeless without your own cyber address.
+
+With cloudflared as the entrypoint to your cluster services, you do not actually need a reverse proxy like Traefik or Nginx.
 
 ---
 
@@ -208,5 +212,3 @@ You reject dependence on megaclouds, reclaim autonomy, and own your digital pres
 Start small: one node, one service. Add more over time.  
 Piece by piece, your infrastructure grows — like Lego blocks clicking into place — until you’ve built something truly yours.
 
-> Grow your own cloud. Run your own stack. Host your own service. By youself and for yourself. 
-> The internet belongs to everyone who dares to host it.
